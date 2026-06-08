@@ -1,0 +1,98 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="A premium, highly aesthetic GUI-based calculator with standard and advanced operations, keyboard support, and history tracking.">
+    <title>CSC426 Premium Calculator</title>
+    <!-- Google Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="index.css">
+</head>
+<body>
+    <!-- Background Animated Glow Bubbles -->
+    <div class="glow-bubble bubble-1"></div>
+    <div class="glow-bubble bubble-2"></div>
+    <div class="glow-bubble bubble-3"></div>
+
+    <div class="calculator-container" id="calculatorContainer">
+        <!-- Header -->
+        <header class="calculator-header">
+            <h1 class="logo">CSC426 Calculator</h1>
+            <button class="history-toggle-btn" id="historyToggleBtn" aria-label="Toggle calculation history">
+                <!-- History Icon (SVG) -->
+                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                    <circle cx="12" cy="12" r="10"/>
+                    <polyline points="12 6 12 12 16 14"/>
+                </svg>
+            </button>
+        </header>
+
+        <!-- Display Area -->
+        <div class="calculator-display">
+            <div class="expression-row" id="expressionDisplay" aria-live="polite"></div>
+            <div class="result-row" id="resultDisplay" aria-live="polite">0</div>
+        </div>
+
+        <!-- Keypad Grid -->
+        <div class="calculator-keypad">
+            <!-- Row 1: Actions & Advanced Ops -->
+            <button class="btn btn-action" id="key-clear" data-key="c">C</button>
+            <button class="btn btn-action" id="key-backspace" data-key="backspace">⌫</button>
+            <button class="btn btn-op" id="key-mod" data-op="%">%</button>
+            <button class="btn btn-op" id="key-exp" data-op="^">^</button>
+
+            <!-- Row 2 -->
+            <button class="btn btn-num" data-num="7">7</button>
+            <button class="btn btn-num" data-num="8">8</button>
+            <button class="btn btn-num" data-num="9">9</button>
+            <button class="btn btn-op" id="key-intdiv" data-op="\">\</button>
+
+            <!-- Row 3 -->
+            <button class="btn btn-num" data-num="4">4</button>
+            <button class="btn btn-num" data-num="5">5</button>
+            <button class="btn btn-num" data-num="6">6</button>
+            <button class="btn btn-op" id="key-div" data-op="/">/</button>
+
+            <!-- Row 4 -->
+            <button class="btn btn-num" data-num="1">1</button>
+            <button class="btn btn-num" data-num="2">2</button>
+            <button class="btn btn-num" data-num="3">3</button>
+            <button class="btn btn-op" id="key-mul" data-op="*">×</button>
+
+            <!-- Row 5 -->
+            <button class="btn btn-num" data-num="0">0</button>
+            <button class="btn btn-num" data-num=".">.</button>
+            <button class="btn btn-op" id="key-sub" data-op="-">−</button>
+            <button class="btn btn-op" id="key-add" data-op="+">+</button>
+
+            <!-- Equals (Spans full width or special style) -->
+            <button class="btn btn-equals" id="key-equals">=</button>
+        </div>
+
+        <!-- History Panel (Slides out) -->
+        <div class="history-panel" id="historyPanel">
+            <div class="history-header">
+                <h2>Calculation History</h2>
+                <button class="close-history-btn" id="closeHistoryBtn" aria-label="Close history">
+                    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                        <line x1="18" y1="6" x2="6" y2="18"></line>
+                        <line x1="6" y1="6" x2="18" y2="18"></line>
+                    </svg>
+                </button>
+            </div>
+            <div class="history-content" id="historyContent">
+                <p class="empty-history-msg">No history yet</p>
+            </div>
+            <div class="history-footer">
+                <button class="clear-history-btn" id="clearHistoryBtn">Clear All History</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Scripts -->
+    <script src="index.js"></script>
+</body>
+</html>
