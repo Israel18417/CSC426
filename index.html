@@ -1,0 +1,315 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="CSC426 Practical Projects Portal - Access the Premium Calculator and Auth Portal assignment projects.">
+    <title>CSC426 Project Portal</title>
+    <!-- Google Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --bg-color: #0b0f19;
+            --card-bg: rgba(255, 255, 255, 0.03);
+            --card-border: rgba(255, 255, 255, 0.08);
+            --card-hover-border: rgba(255, 255, 255, 0.2);
+            --text-primary: #ffffff;
+            --text-secondary: #94a3b8;
+            --primary-glow: rgba(99, 102, 241, 0.15);
+            --secondary-glow: rgba(236, 72, 153, 0.15);
+            --accent-blue: #6366f1;
+            --accent-pink: #ec4899;
+            --transition-speed: 0.4s;
+        }
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
+        body {
+            font-family: 'Outfit', sans-serif;
+            background-color: var(--bg-color);
+            color: var(--text-primary);
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            overflow-x: hidden;
+            position: relative;
+            padding: 2rem;
+        }
+
+        /* Background Animated Glow Bubbles */
+        .glow-bubble {
+            position: absolute;
+            border-radius: 50%;
+            filter: blur(100px);
+            z-index: 0;
+            opacity: 0.6;
+            pointer-events: none;
+            animation: float 20s infinite alternate ease-in-out;
+        }
+
+        .bubble-1 {
+            top: 10%;
+            left: 15%;
+            width: 350px;
+            height: 350px;
+            background: radial-gradient(circle, var(--accent-blue) 0%, transparent 70%);
+        }
+
+        .bubble-2 {
+            bottom: 10%;
+            right: 15%;
+            width: 400px;
+            height: 400px;
+            background: radial-gradient(circle, var(--accent-pink) 0%, transparent 70%);
+            animation-delay: -5s;
+        }
+
+        @keyframes float {
+            0% {
+                transform: translate(0, 0) scale(1);
+            }
+            100% {
+                transform: translate(50px, 40px) scale(1.1);
+            }
+        }
+
+        /* Container & Portal Layout */
+        .portal-container {
+            position: relative;
+            z-index: 1;
+            max-width: 1000px;
+            width: 100%;
+            text-align: center;
+        }
+
+        header {
+            margin-bottom: 4rem;
+        }
+
+        h1 {
+            font-size: 3rem;
+            font-weight: 700;
+            letter-spacing: -0.05em;
+            margin-bottom: 1rem;
+            background: linear-gradient(135deg, #ffffff 30%, #a5b4fc 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+
+        .subtitle {
+            font-size: 1.1rem;
+            color: var(--text-secondary);
+            font-weight: 300;
+            max-width: 600px;
+            margin: 0 auto;
+            line-height: 1.6;
+        }
+
+        /* Grid */
+        .projects-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
+            gap: 2.5rem;
+            justify-content: center;
+            width: 100%;
+        }
+
+        /* Project Cards */
+        .project-card {
+            background: var(--card-bg);
+            border: 1px solid var(--card-border);
+            border-radius: 24px;
+            padding: 3rem 2rem;
+            text-decoration: none;
+            color: inherit;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: space-between;
+            transition: all var(--transition-speed) cubic-bezier(0.16, 1, 0.3, 1);
+            backdrop-filter: blur(20px);
+            -webkit-backdrop-filter: blur(20px);
+            position: relative;
+            overflow: hidden;
+            box-shadow: 0 4px 30px rgba(0, 0, 0, 0.2);
+        }
+
+        .project-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(180deg, rgba(255, 255, 255, 0.05) 0%, transparent 100%);
+            opacity: 0;
+            transition: opacity var(--transition-speed);
+        }
+
+        .project-card:hover {
+            transform: translateY(-8px);
+            border-color: var(--card-hover-border);
+            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.4), 
+                        0 0 40px rgba(99, 102, 241, 0.1);
+        }
+
+        .project-card:hover::before {
+            opacity: 1;
+        }
+
+        .card-icon-container {
+            width: 80px;
+            height: 80px;
+            border-radius: 20px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin-bottom: 2rem;
+            transition: transform var(--transition-speed);
+        }
+
+        .project-card:hover .card-icon-container {
+            transform: scale(1.1) rotate(5deg);
+        }
+
+        .calculator-card .card-icon-container {
+            background: linear-gradient(135deg, rgba(99, 102, 241, 0.2) 0%, rgba(99, 102, 241, 0.05) 100%);
+            border: 1px solid rgba(99, 102, 241, 0.3);
+            color: #818cf8;
+        }
+
+        .auth-card .card-icon-container {
+            background: linear-gradient(135deg, rgba(236, 72, 153, 0.2) 0%, rgba(236, 72, 153, 0.05) 100%);
+            border: 1px solid rgba(236, 72, 153, 0.3);
+            color: #f472b6;
+        }
+
+        .project-card h2 {
+            font-size: 1.6rem;
+            font-weight: 600;
+            margin-bottom: 1rem;
+            letter-spacing: -0.02em;
+        }
+
+        .project-card p {
+            font-size: 0.95rem;
+            color: var(--text-secondary);
+            line-height: 1.6;
+            margin-bottom: 2rem;
+            font-weight: 300;
+        }
+
+        .btn-launch {
+            display: inline-flex;
+            align-items: center;
+            gap: 0.5rem;
+            font-size: 1rem;
+            font-weight: 600;
+            padding: 0.8rem 2rem;
+            border-radius: 12px;
+            background: rgba(255, 255, 255, 0.05);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            color: var(--text-primary);
+            transition: all var(--transition-speed);
+        }
+
+        .calculator-card:hover .btn-launch {
+            background: var(--accent-blue);
+            border-color: var(--accent-blue);
+            box-shadow: 0 0 20px rgba(99, 102, 241, 0.4);
+        }
+
+        .auth-card:hover .btn-launch {
+            background: var(--accent-pink);
+            border-color: var(--accent-pink);
+            box-shadow: 0 0 20px rgba(236, 72, 153, 0.4);
+        }
+
+        /* Footer */
+        footer {
+            margin-top: auto;
+            padding-top: 4rem;
+            font-size: 0.85rem;
+            color: #475569;
+            font-weight: 400;
+            letter-spacing: 0.05em;
+            text-transform: uppercase;
+        }
+    </style>
+</head>
+<body>
+    <!-- Background Animated Glow Bubbles -->
+    <div class="glow-bubble bubble-1"></div>
+    <div class="glow-bubble bubble-2"></div>
+
+    <div class="portal-container">
+        <!-- Header -->
+        <header>
+            <h1 id="portal-title">CSC426 Project Portal</h1>
+            <p class="subtitle">Welcome to the practical repository for CSC426. Select a project below to launch and interact with it.</p>
+        </header>
+
+        <!-- Grid of Project Cards -->
+        <main class="projects-grid">
+            <!-- Card 1: Calculator -->
+            <a href="/calculator/index.html" class="project-card calculator-card" id="link-calculator">
+                <div>
+                    <div class="card-icon-container">
+                        <!-- Calculator Icon -->
+                        <svg width="40" height="40" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                            <rect x="4" y="2" width="16" height="20" rx="2" ry="2"/>
+                            <line x1="8" y1="6" x2="16" y2="6"/>
+                            <line x1="16" y1="14" x2="16" y2="18"/>
+                            <path d="M16 10h.01M12 10h.01M8 10h.01M12 14h.01M8 14h.01M12 18h.01M8 18h.01"/>
+                        </svg>
+                    </div>
+                    <h2>Premium Calculator</h2>
+                    <p>A highly aesthetic GUI calculator with standard and advanced operations, expression evaluation, history log, and responsive layout.</p>
+                </div>
+                <div class="btn-launch">
+                    Launch App
+                    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+                        <line x1="5" y1="12" x2="19" y2="12"></line>
+                        <polyline points="12 5 19 12 12 19"></polyline>
+                    </svg>
+                </div>
+            </a>
+
+            <!-- Card 2: Auth Portal -->
+            <a href="/auth/index.html" class="project-card auth-card" id="link-auth">
+                <div>
+                    <div class="card-icon-container">
+                        <!-- Shield/Lock Icon -->
+                        <svg width="40" height="40" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                            <rect x="3" y="11" width="18" height="11" rx="2" ry="2"/>
+                            <path d="M7 11V7a5 5 0 0 1 10 0v4"/>
+                        </svg>
+                    </div>
+                    <h2>Auth Portal</h2>
+                    <p>A modern sign-in and sign-up page featuring sliding panels, real-time client-side password strength validation, and glassmorphic synthwave aesthetics.</p>
+                </div>
+                <div class="btn-launch">
+                    Launch App
+                    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+                        <line x1="5" y1="12" x2="19" y2="12"></line>
+                        <polyline points="12 5 19 12 12 19"></polyline>
+                    </svg>
+                </div>
+            </a>
+        </main>
+
+        <!-- Footer -->
+        <footer>
+            CSC426 &bull; Practical Assignments &bull; Semester Work
+        </footer>
+    </div>
+</body>
+</html>

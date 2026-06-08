@@ -199,9 +199,11 @@ form h1 {
     font-size: 0.9rem;
 }
 
-/* When focused or filled, label floats up */
+/* When focused, filled, or autofilled, label floats up */
 .input-group input:focus ~ label,
 .input-group input:not(:placeholder-shown) ~ label,
+.input-group input:-webkit-autofill ~ label,
+.input-group input:autofill ~ label,
 .input-group.has-content label {
     top: 0;
     font-size: 0.75rem;

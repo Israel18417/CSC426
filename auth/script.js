@@ -1,3 +1,8 @@
+// Browser Compatibility Polyfills
+if (window.NodeList && !NodeList.prototype.forEach) {
+    NodeList.prototype.forEach = Array.prototype.forEach;
+}
+
 // DOM Elements
 const container = document.getElementById('container');
 const signUpBtn = document.getElementById('signUpBtn');
@@ -91,26 +96,32 @@ function setupPasswordToggles() {
 // Helper to check for active content (fixes floating label overlapping on autofill)
 function setupFloatingLabels() {
     const inputs = document.querySelectorAll('.input-group input');
+    
+    const checkInput = (input) => {
+        // Safe check for autofill styles or non-empty value
+        if (input.value !== '' || input.matches(':-webkit-autofill') || input.matches(':autofill')) {
+            input.parentElement.classList.add('has-content');
+        } else {
+            input.parentElement.classList.remove('has-content');
+        }
+    };
+
     inputs.forEach(input => {
         // Initial check
-        if (input.value !== '') {
-            input.parentElement.classList.add('has-content');
-        }
+        checkInput(input);
 
-        input.addEventListener('blur', () => {
-            if (input.value !== '') {
-                input.parentElement.classList.add('has-content');
-            } else {
-                input.parentElement.classList.remove('has-content');
-            }
-        });
-
-        input.addEventListener('input', () => {
-            if (input.value !== '') {
-                input.parentElement.classList.add('has-content');
-            }
-        });
+        input.addEventListener('blur', () => checkInput(input));
+        input.addEventListener('input', () => checkInput(input));
+        input.addEventListener('change', () => checkInput(input));
     });
+
+    // Multiple delayed checks to capture browser auto-fill/auto-complete on page load
+    setTimeout(() => {
+        inputs.forEach(checkInput);
+    }, 100);
+    setTimeout(() => {
+        inputs.forEach(checkInput);
+    }, 500);
 }
 
 // 3. Real-time Client-Side Validation

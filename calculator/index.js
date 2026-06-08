@@ -1,3 +1,13 @@
+// Browser Compatibility Polyfills
+if (window.NodeList && !NodeList.prototype.forEach) {
+    NodeList.prototype.forEach = Array.prototype.forEach;
+}
+if (!Math.trunc) {
+    Math.trunc = function(v) {
+        return v < 0 ? Math.ceil(v) : Math.floor(v);
+    };
+}
+
 // State Variables
 let expression = '';
 let history = [];
@@ -475,17 +485,22 @@ function renderHistory() {
 }
 
 function saveHistoryToStorage() {
-    localStorage.setItem('csc426_calc_history', JSON.stringify(history));
+    try {
+        localStorage.setItem('csc426_calc_history', JSON.stringify(history));
+    } catch (e) {
+        console.warn('localStorage is not available or full:', e);
+    }
 }
 
 function loadHistoryFromStorage() {
-    const saved = localStorage.getItem('csc426_calc_history');
-    if (saved) {
-        try {
+    try {
+        const saved = localStorage.getItem('csc426_calc_history');
+        if (saved) {
             history = JSON.parse(saved);
             renderHistory();
-        } catch (e) {
-            history = [];
         }
+    } catch (e) {
+        console.warn('localStorage is not available:', e);
+        history = [];
     }
 }
