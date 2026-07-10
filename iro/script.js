@@ -597,7 +597,51 @@ if (btnResetData) {
     });
 }
 
+// --- Admin Authentication Form Logic ---
+const adminLoginForm = document.getElementById("admin-login-form");
+const loginErrorMsg = document.getElementById("login-error-msg");
+
+if (adminLoginForm) {
+    adminLoginForm.addEventListener("submit", (e) => {
+        e.preventDefault();
+        const usernameInput = document.getElementById("admin-username").value.trim();
+        const passwordInput = document.getElementById("admin-password").value.trim();
+
+        if (usernameInput === "admin" && passwordInput === "admin123") {
+            sessionStorage.setItem("iro_admin_logged_in", "true");
+            if (loginErrorMsg) loginErrorMsg.classList.add("hidden");
+            adminLoginForm.reset();
+            renderAdminDashboard();
+        } else {
+            if (loginErrorMsg) loginErrorMsg.classList.remove("hidden");
+        }
+    });
+}
+
+// Admin Logout Logic
+const btnAdminLogout = document.getElementById("btn-admin-logout");
+if (btnAdminLogout) {
+    btnAdminLogout.addEventListener("click", () => {
+        sessionStorage.removeItem("iro_admin_logged_in");
+        renderAdminDashboard();
+    });
+}
+
 function renderAdminDashboard() {
+    // Check authentication state
+    const loggedIn = sessionStorage.getItem("iro_admin_logged_in") === "true";
+    const loginContainer = document.getElementById("admin-login-container");
+    const dashboardContainer = document.getElementById("admin-dashboard-container");
+
+    if (!loggedIn) {
+        if (loginContainer) loginContainer.classList.remove("hidden");
+        if (dashboardContainer) dashboardContainer.classList.add("hidden");
+        return;
+    }
+
+    if (loginContainer) loginContainer.classList.add("hidden");
+    if (dashboardContainer) dashboardContainer.classList.remove("hidden");
+
     const reports = getReports();
     const tableBody = document.getElementById("admin-table-rows");
 
