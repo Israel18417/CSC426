@@ -1,0 +1,455 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="Issues Reporting Outlet (IRO) - A mini web interface connecting AAUA students and the Akungba community.">
+    <title>IRO - Issues Reporting Outlet</title>
+    <!-- Google Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <!-- Ambient Animated Glow Bubbles -->
+    <div class="glow-bubble bubble-1"></div>
+    <div class="glow-bubble bubble-2"></div>
+    <div class="glow-bubble bubble-3"></div>
+
+    <div class="app-container">
+        <!-- Main Header & Navigation -->
+        <header class="app-header">
+            <div class="nav-container">
+                <a href="#home" class="logo">
+                    <svg class="logo-icon" width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+                        <path d="M10.29 3.86L1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0z"/>
+                        <line x1="12" y1="9" x2="12" y2="13"/>
+                        <line x1="12" y1="17" x2="12.01" y2="17"/>
+                    </svg>
+                    <span>IRO<span class="logo-dot">.</span></span>
+                </a>
+                <button class="mobile-nav-toggle" aria-label="Toggle navigation" id="nav-toggle">
+                    <span></span>
+                    <span></span>
+                    <span></span>
+                </button>
+                <nav class="nav-links" id="nav-links">
+                    <a href="#home" class="nav-link" id="nav-link-home">Home</a>
+                    <a href="#report" class="nav-link" id="nav-link-report">Report Issue</a>
+                    <a href="#view" class="nav-link" id="nav-link-view">View Reports</a>
+                    <a href="#admin" class="nav-link" id="nav-link-admin">Admin Dashboard</a>
+                </nav>
+            </div>
+        </header>
+
+        <!-- Dynamic Main Content Wrapper -->
+        <main class="app-content">
+
+            <!-- 1. HOME VIEW -->
+            <section id="view-home" class="view-section active">
+                <div class="hero-container">
+                    <div class="hero-tag">AAUA Civic Connection</div>
+                    <h1 class="hero-title">Issues Reporting Outlet</h1>
+                    <p class="hero-subtitle">Connecting AAUA Students and the Akungba Community. Report local challenges quickly, track resolutions, and protect our environment securely.</p>
+                    
+                    <div class="hero-actions">
+                        <a href="#report" class="btn btn-primary">
+                            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 5v14M5 12h14"/></svg>
+                            Report an Issue
+                        </a>
+                        <a href="#view" class="btn btn-secondary">
+                            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/><circle cx="12" cy="12" r="3"/></svg>
+                            View Reports
+                        </a>
+                    </div>
+                </div>
+
+                <!-- Summary Counters -->
+                <div class="stats-grid" id="home-stats">
+                    <div class="stat-card glass-card">
+                        <div class="stat-icon-wrapper blue">
+                            <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/><line x1="16" y1="13" x2="8" y2="13"/><line x1="16" y1="17" x2="8" y2="17"/><polyline points="10 9 9 9 8 9"/></svg>
+                        </div>
+                        <div class="stat-info">
+                            <span class="stat-value" id="stat-total">0</span>
+                            <span class="stat-label">Total Reports</span>
+                        </div>
+                    </div>
+                    <div class="stat-card glass-card">
+                        <div class="stat-icon-wrapper orange">
+                            <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>
+                        </div>
+                        <div class="stat-info">
+                            <span class="stat-value" id="stat-pending">0</span>
+                            <span class="stat-label">Pending</span>
+                        </div>
+                    </div>
+                    <div class="stat-card glass-card">
+                        <div class="stat-icon-wrapper green">
+                            <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg>
+                        </div>
+                        <div class="stat-info">
+                            <span class="stat-value" id="stat-resolved">0</span>
+                            <span class="stat-label">Resolved</span>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Info Cards -->
+                <div class="info-section">
+                    <h2 class="section-title">How It Works</h2>
+                    <div class="info-grid">
+                        <div class="info-card glass-card">
+                            <div class="info-step">01</div>
+                            <h3>Submit Details</h3>
+                            <p>Fill out the reporting form with issues regarding power, water, roads, security or other challenges. Report anonymously if you prefer.</p>
+                        </div>
+                        <div class="info-card glass-card">
+                            <div class="info-step">02</div>
+                            <h3>Officer Review</h3>
+                            <p>Community administrators review details, update status updates (e.g. In Progress), and leave verified feedback comments.</p>
+                        </div>
+                        <div class="info-card glass-card">
+                            <div class="info-step">03</div>
+                            <h3>Resolution</h3>
+                            <p>Track steps taken to resolve the issue. Status transitions to Resolved once actionable steps have been completed.</p>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+
+            <!-- 2. REPORT ISSUE VIEW -->
+            <section id="view-report" class="view-section">
+                <div class="section-header">
+                    <h1 class="page-title">Report a New Issue</h1>
+                    <p class="page-subtitle">Submit details regarding civic or environmental challenges around campus and community areas.</p>
+                </div>
+
+                <div class="form-container">
+                    <form id="report-form" class="glass-card form-glass">
+                        <div class="form-grid">
+                            
+                            <!-- Full Name -->
+                            <div class="form-group col-span-2">
+                                <label for="field-name">Full Name (Optional)</label>
+                                <input type="text" id="field-name" placeholder="Enter your name or leave empty" class="form-input">
+                                <span class="input-helper">Leaving this blank will report the issue as anonymous automatically.</span>
+                            </div>
+
+                            <!-- Anonymous Toggle -->
+                            <div class="form-group col-span-2 checkbox-group">
+                                <label class="checkbox-container">
+                                    <input type="checkbox" id="field-anonymous">
+                                    <span class="checkbox-checkmark"></span>
+                                    <span class="checkbox-label">Report Anonymously</span>
+                                </label>
+                            </div>
+
+                            <!-- Reporter Type -->
+                            <div class="form-group">
+                                <label>Reporter Type</label>
+                                <div class="toggle-buttons">
+                                    <button type="button" class="btn-toggle active" data-type="student" id="reporter-student">Student</button>
+                                    <button type="button" class="btn-toggle" data-type="resident" id="reporter-resident">Resident</button>
+                                </div>
+                                <input type="hidden" id="field-reporter-type" value="student">
+                            </div>
+
+                            <!-- Faculty (Conditional) -->
+                            <div class="form-group" id="faculty-group">
+                                <label for="field-faculty">Faculty</label>
+                                <select id="field-faculty" class="form-select">
+                                    <option value="" disabled selected>Select Faculty</option>
+                                    <option value="Science">Science</option>
+                                    <option value="Social & Management Sciences">Social & Management Sciences</option>
+                                    <option value="Arts">Arts</option>
+                                    <option value="Education">Education</option>
+                                    <option value="Law">Law</option>
+                                    <option value="Agriculture">Agriculture</option>
+                                    <option value="Environmental Design">Environmental Design</option>
+                                    <option value="Basic Medical Sciences">Basic Medical Sciences</option>
+                                </select>
+                            </div>
+
+                            <!-- Category -->
+                            <div class="form-group">
+                                <label for="field-category">Category</label>
+                                <select id="field-category" class="form-select" required>
+                                    <option value="" disabled selected>Select Category</option>
+                                    <option value="Security">Security</option>
+                                    <option value="Water">Water</option>
+                                    <option value="Electricity">Electricity</option>
+                                    <option value="Roads">Roads</option>
+                                    <option value="Hostel">Hostel</option>
+                                    <option value="Sanitation">Sanitation</option>
+                                    <option value="Harassment">Harassment</option>
+                                    <option value="Transportation">Transportation</option>
+                                    <option value="Others">Others</option>
+                                </select>
+                            </div>
+
+                            <!-- Community -->
+                            <div class="form-group">
+                                <label for="field-community">Community / Area</label>
+                                <select id="field-community" class="form-select" required>
+                                    <option value="" disabled selected>Select Community Area</option>
+                                    <option value="Akungba (Main Town)">Akungba (Main Town)</option>
+                                    <option value="Sangisha">Sangisha</option>
+                                    <option value="Medoline">Medoline</option>
+                                    <option value="Iwaro">Iwaro</option>
+                                    <option value="Okusa">Okusa</option>
+                                    <option value="Oba Street">Oba Street</option>
+                                    <option value="Campus Areas">Campus Areas</option>
+                                </select>
+                            </div>
+
+                            <!-- Location description -->
+                            <div class="form-group col-span-2">
+                                <label for="field-location">Specific Location Description</label>
+                                <input type="text" id="field-location" placeholder="e.g. Opposite Medoline Junction, near the bakery" class="form-input" required>
+                            </div>
+
+                            <!-- Severity -->
+                            <div class="form-group col-span-2">
+                                <label>Severity Level</label>
+                                <div class="severity-buttons">
+                                    <button type="button" class="btn-severity low" data-severity="Low">
+                                        <span class="indicator"></span> Low
+                                    </button>
+                                    <button type="button" class="btn-severity medium active" data-severity="Medium">
+                                        <span class="indicator"></span> Medium
+                                    </button>
+                                    <button type="button" class="btn-severity high" data-severity="High">
+                                        <span class="indicator"></span> High
+                                    </button>
+                                </div>
+                                <input type="hidden" id="field-severity" value="Medium">
+                            </div>
+
+                            <!-- Title -->
+                            <div class="form-group col-span-2">
+                                <label for="field-title">Issue Title</label>
+                                <input type="text" id="field-title" placeholder="Brief summary of the issue (e.g. Power grid spark at Medoline)" class="form-input" required>
+                            </div>
+
+                            <!-- Description -->
+                            <div class="form-group col-span-2">
+                                <label for="field-description">Detailed Description</label>
+                                <textarea id="field-description" rows="5" placeholder="Explain the situation in details. Mention when it started, current dangers or impact." class="form-textarea" required></textarea>
+                            </div>
+
+                            <!-- Upload Image -->
+                            <div class="form-group col-span-2">
+                                <label>Upload Supporting Evidence (Image)</label>
+                                <div class="upload-area" id="upload-zone">
+                                    <input type="file" id="field-image" accept="image/*" class="file-hidden">
+                                    <div class="upload-prompt" id="upload-prompt">
+                                        <svg class="upload-icon" width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                            <rect x="3" y="3" width="18" height="18" rx="2" ry="2"/>
+                                            <circle cx="8.5" cy="8.5" r="1.5"/>
+                                            <polyline points="21 15 16 10 5 21"/>
+                                        </svg>
+                                        <p class="primary-text">Click or drag image file to upload</p>
+                                        <p class="secondary-text">Supported: JPG, PNG, WEBP (Max 2MB)</p>
+                                    </div>
+                                    <div class="upload-preview hidden" id="upload-preview-container">
+                                        <img src="" id="upload-img-preview" alt="Evidence Preview">
+                                        <button type="button" class="btn-remove-preview" id="btn-remove-img">
+                                            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
+                                        </button>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="form-actions">
+                            <button type="submit" class="btn btn-primary btn-submit">
+                                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="22" y1="2" x2="11" y2="13"/><polygon points="22 2 15 22 11 13 2 9 22 2"/></svg>
+                                Submit Report
+                            </button>
+                        </div>
+                    </form>
+                </div>
+            </section>
+
+
+            <!-- 3. VIEW REPORTS VIEW -->
+            <section id="view-view" class="view-section">
+                <div class="section-header">
+                    <h1 class="page-title">Community Reports Outlet</h1>
+                    <p class="page-subtitle">Track and explore public issues raised by students and community residents.</p>
+                </div>
+
+                <!-- Filters Panel -->
+                <div class="filters-container glass-card">
+                    <div class="filters-row">
+                        <!-- Search Box -->
+                        <div class="search-box">
+                            <svg class="search-icon" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>
+                            <input type="text" id="filter-search" placeholder="Search by title, description or location..." class="filter-input">
+                        </div>
+
+                        <!-- Category Filter -->
+                        <div class="filter-group">
+                            <select id="filter-category" class="filter-select">
+                                <option value="All">All Categories</option>
+                                <option value="Security">Security</option>
+                                <option value="Water">Water</option>
+                                <option value="Electricity">Electricity</option>
+                                <option value="Roads">Roads</option>
+                                <option value="Hostel">Hostel</option>
+                                <option value="Sanitation">Sanitation</option>
+                                <option value="Harassment">Harassment</option>
+                                <option value="Transportation">Transportation</option>
+                                <option value="Others">Others</option>
+                            </select>
+                        </div>
+                    </div>
+
+                    <!-- Status Tabs Filter -->
+                    <div class="status-tabs-container">
+                        <div class="status-tabs">
+                            <button class="tab-btn active" data-status="All">All Statuses</button>
+                            <button class="tab-btn" data-status="Pending">Pending</button>
+                            <button class="tab-btn" data-status="In Progress">In Progress</button>
+                            <button class="tab-btn" data-status="Resolved">Resolved</button>
+                            <button class="tab-btn" data-status="Rejected">Rejected</button>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Reports Cards Grid -->
+                <div class="reports-grid" id="reports-list-container">
+                    <!-- Dynamic Rendered Cards -->
+                </div>
+
+                <!-- Empty State -->
+                <div class="empty-state hidden" id="reports-empty">
+                    <svg width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
+                        <circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/>
+                    </svg>
+                    <h3>No Reports Found</h3>
+                    <p>Try adjusting your search filters or submit a new report if you have a local issue to raise.</p>
+                    <a href="#report" class="btn btn-primary btn-sm">Report Issue</a>
+                </div>
+            </section>
+
+
+            <!-- 4. REPORT DETAILS VIEW -->
+            <section id="view-details" class="view-section">
+                <div class="details-back-header">
+                    <a href="#view" class="btn-back">
+                        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><line x1="19" y1="12" x2="5" y2="12"/><polyline points="12 19 5 12 12 5"/></svg>
+                        Back to Reports
+                    </a>
+                </div>
+
+                <div class="details-layout" id="details-content-container">
+                    <!-- Dynamic Content Rendered Here -->
+                </div>
+            </section>
+
+
+            <!-- 5. ADMIN DASHBOARD VIEW -->
+            <section id="view-admin" class="view-section">
+                <div class="section-header admin-header-flex">
+                    <div>
+                        <h1 class="page-title">Admin Management Center</h1>
+                        <p class="page-subtitle">Oversee all submitted complaints, update timelines, write comments, and manage safety responses.</p>
+                    </div>
+                    <button class="btn btn-secondary btn-sm" id="btn-reset-data">
+                        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21.5 2v6h-6M21.34 15.57a10 10 0 1 1-.57-8.38l5.67-5.67"/></svg>
+                        Reset Mock Data
+                    </button>
+                </div>
+
+                <!-- Stats Summary Row -->
+                <div class="admin-stats-row" id="admin-stats-widgets">
+                    <!-- Dynamic values populated from localStorage -->
+                    <div class="admin-stat-widget glass-card border-left-blue">
+                        <span class="widget-label">Total Reports</span>
+                        <span class="widget-value" id="admin-total-count">0</span>
+                    </div>
+                    <div class="admin-stat-widget glass-card border-left-yellow">
+                        <span class="widget-label">Pending Reviews</span>
+                        <span class="widget-value" id="admin-pending-count">0</span>
+                    </div>
+                    <div class="admin-stat-widget glass-card border-left-purple">
+                        <span class="widget-label">In Progress</span>
+                        <span class="widget-value" id="admin-progress-count">0</span>
+                    </div>
+                    <div class="admin-stat-widget glass-card border-left-green">
+                        <span class="widget-label">Resolved Issues</span>
+                        <span class="widget-value" id="admin-resolved-count">0</span>
+                    </div>
+                    <div class="admin-stat-widget glass-card border-left-red">
+                        <span class="widget-label">Rejected Reviews</span>
+                        <span class="widget-value" id="admin-rejected-count">0</span>
+                    </div>
+                </div>
+
+                <!-- Admin Grid & Filters -->
+                <div class="admin-table-container glass-card">
+                    <div class="admin-filters">
+                        <div class="search-box">
+                            <svg class="search-icon" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>
+                            <input type="text" id="admin-filter-search" placeholder="Search reports..." class="filter-input">
+                        </div>
+                        <select id="admin-filter-category" class="filter-select">
+                            <option value="All">All Categories</option>
+                            <option value="Security">Security</option>
+                            <option value="Water">Water</option>
+                            <option value="Electricity">Electricity</option>
+                            <option value="Roads">Roads</option>
+                            <option value="Hostel">Hostel</option>
+                            <option value="Sanitation">Sanitation</option>
+                            <option value="Harassment">Harassment</option>
+                            <option value="Transportation">Transportation</option>
+                            <option value="Others">Others</option>
+                        </select>
+                    </div>
+
+                    <!-- Desktop Tables -->
+                    <div class="table-responsive">
+                        <table class="admin-table">
+                            <thead>
+                                <tr>
+                                    <th>ID</th>
+                                    <th>Title</th>
+                                    <th>Category</th>
+                                    <th>Reporter</th>
+                                    <th>Severity</th>
+                                    <th>Status</th>
+                                    <th>Actions</th>
+                                </tr>
+                            </thead>
+                            <tbody id="admin-table-rows">
+                                <!-- Dynamic admin rows -->
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </section>
+
+        </main>
+
+        <!-- Footer -->
+        <footer class="app-footer">
+            <div class="footer-content">
+                <p>&copy; 2026 Issues Reporting Outlet (IRO). Developed for AAUA Student Practical Submission.</p>
+                <div class="footer-links">
+                    <a href="#home">Home</a>
+                    <a href="#report">Report Issue</a>
+                    <a href="#view">View Reports</a>
+                    <a href="#admin">Admin Dashboard</a>
+                </div>
+            </div>
+        </footer>
+    </div>
+
+    <!-- Script Entry Point -->
+    <script src="script.js"></script>
+</body>
+</html>

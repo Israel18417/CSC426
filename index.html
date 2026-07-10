@@ -21,6 +21,7 @@
             --secondary-glow: rgba(236, 72, 153, 0.15);
             --accent-blue: #6366f1;
             --accent-pink: #ec4899;
+            --accent-emerald: #10b981;
             --transition-speed: 0.4s;
         }
 
@@ -192,6 +193,12 @@
             color: #f472b6;
         }
 
+        .iro-card .card-icon-container {
+            background: linear-gradient(135deg, rgba(16, 185, 129, 0.2) 0%, rgba(16, 185, 129, 0.05) 100%);
+            border: 1px solid rgba(16, 185, 129, 0.3);
+            color: #34d399;
+        }
+
         .project-card h2 {
             font-size: 1.6rem;
             font-weight: 600;
@@ -231,6 +238,12 @@
             background: var(--accent-pink);
             border-color: var(--accent-pink);
             box-shadow: 0 0 20px rgba(236, 72, 153, 0.4);
+        }
+
+        .iro-card:hover .btn-launch {
+            background: var(--accent-emerald);
+            border-color: var(--accent-emerald);
+            box-shadow: 0 0 20px rgba(16, 185, 129, 0.4);
         }
 
         /* Footer */
@@ -295,6 +308,29 @@
                     </div>
                     <h2>Auth Portal</h2>
                     <p>A modern sign-in and sign-up page featuring sliding panels, real-time client-side password strength validation, and glassmorphic synthwave aesthetics.</p>
+                </div>
+                <div class="btn-launch">
+                    Launch App
+                    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+                        <line x1="5" y1="12" x2="19" y2="12"></line>
+                        <polyline points="12 5 19 12 12 19"></polyline>
+                    </svg>
+                </div>
+            </a>
+
+            <!-- Card 3: Issues Reporting Outlet (IRO) -->
+            <a href="/iro/index.html" class="project-card iro-card" id="link-iro">
+                <div>
+                    <div class="card-icon-container">
+                        <!-- Alert/Notification Icon -->
+                        <svg width="40" height="40" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                            <path d="M10.29 3.86L1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0z"/>
+                            <line x1="12" y1="9" x2="12" y2="13"/>
+                            <line x1="12" y1="17" x2="12.01" y2="17"/>
+                        </svg>
+                    </div>
+                    <h2>Issues Reporting Outlet</h2>
+                    <p>A mini civic web interface connecting AAUA students and the Akungba community. Features reporting forms, status tracking, dynamic filtering, and admin dashboard.</p>
                 </div>
                 <div class="btn-launch">
                     Launch App
