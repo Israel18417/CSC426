@@ -89,6 +89,95 @@ const INITIAL_REPORTS = [
     }
 ];
 
+// ==========================================
+// PROFESSIONAL NOTIFICATION SYSTEMS (TOAST & MODAL)
+// ==========================================
+
+// --- 1. Custom Toast Notification System ---
+function showToast(message, type = 'success') {
+    let container = document.getElementById('toast-container');
+    if (!container) {
+        container = document.createElement('div');
+        container.id = 'toast-container';
+        container.className = 'toast-container';
+        document.body.appendChild(container);
+    }
+    
+    const toast = document.createElement('div');
+    toast.className = `toast toast-${type} glass-card`;
+    
+    let icon = '';
+    if (type === 'success') {
+        icon = `<svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg>`;
+    } else if (type === 'error') {
+        icon = `<svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg>`;
+    } else {
+        icon = `<svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><line x1="12" y1="12" x2="12" y2="16"/><line x1="12" y1="8" x2="12.01" y2="8"/></svg>`;
+    }
+
+    toast.innerHTML = `
+        <div class="toast-icon">${icon}</div>
+        <div class="toast-message">${message}</div>
+    `;
+    
+    container.appendChild(toast);
+    
+    // Animate in
+    setTimeout(() => toast.classList.add('visible'), 10);
+    
+    // Auto Dismiss
+    setTimeout(() => {
+        toast.classList.remove('visible');
+        setTimeout(() => toast.remove(), 300);
+    }, 4000);
+}
+
+// --- 2. Custom Confirmation Modal System ---
+function showConfirmModal(title, message, onConfirm) {
+    const modal = document.getElementById('confirm-modal');
+    if (!modal) return;
+    
+    document.getElementById('modal-title').textContent = title;
+    document.getElementById('modal-message').textContent = message;
+    
+    const btnConfirm = document.getElementById('modal-btn-confirm');
+    const btnCancel = document.getElementById('modal-btn-cancel');
+    
+    // Clone buttons to clear previous event listeners
+    const newBtnConfirm = btnConfirm.cloneNode(true);
+    const newBtnCancel = btnCancel.cloneNode(true);
+    
+    btnConfirm.parentNode.replaceChild(newBtnConfirm, btnConfirm);
+    btnCancel.parentNode.replaceChild(newBtnCancel, btnCancel);
+    
+    newBtnConfirm.addEventListener('click', () => {
+        onConfirm();
+        modal.classList.add('hidden');
+    });
+    
+    newBtnCancel.addEventListener('click', () => {
+        modal.classList.add('hidden');
+    });
+    
+    modal.classList.remove('hidden');
+}
+
+// --- 3. Stats Counter Animation ---
+function animateValue(obj, start, end, duration) {
+    let startTimestamp = null;
+    const step = (timestamp) => {
+        if (!startTimestamp) startTimestamp = timestamp;
+        const progress = Math.min((timestamp - startTimestamp) / duration, 1);
+        obj.textContent = Math.floor(progress * (end - start) + start);
+        if (progress < 1) {
+            window.requestAnimationFrame(step);
+        } else {
+            obj.textContent = end;
+        }
+    };
+    window.requestAnimationFrame(step);
+}
+
 // --- State Management Helpers ---
 function getReports() {
     let reports = localStorage.getItem("iro_reports");
@@ -120,7 +209,6 @@ function router() {
 
     if (hash.startsWith('#details')) {
         sectionId = '#details';
-        // Parse ID from format #details?id=001
         const queryParams = new URLSearchParams(hash.split('?')[1] || '');
         reportId = queryParams.get('id');
     }
@@ -174,7 +262,7 @@ function router() {
 // Ensure routing runs on hashchange and page load
 window.addEventListener('hashchange', router);
 window.addEventListener('DOMContentLoaded', () => {
-    getReports(); // Check or seed mock data
+    getReports(); // Seed default reports if needed
     router();
 });
 
@@ -200,9 +288,15 @@ function renderHomeStats() {
     const pending = reports.filter(r => r.status === 'Pending').length;
     const resolved = reports.filter(r => r.status === 'Resolved').length;
 
-    document.getElementById("stat-total").textContent = total;
-    document.getElementById("stat-pending").textContent = pending;
-    document.getElementById("stat-resolved").textContent = resolved;
+    const totalVal = document.getElementById("stat-total");
+    const pendingVal = document.getElementById("stat-pending");
+    const resolvedVal = document.getElementById("stat-resolved");
+
+    if (totalVal && pendingVal && resolvedVal) {
+        animateValue(totalVal, 0, total, 700);
+        animateValue(pendingVal, 0, pending, 700);
+        animateValue(resolvedVal, 0, resolved, 700);
+    }
 }
 
 
@@ -232,16 +326,19 @@ if (reporterStudentBtn && reporterResidentBtn) {
     });
 }
 
-// Anonymous Toggle Logic
+// Anonymous Toggle Logic with Collapse Transitions
 const anonymousCheckbox = document.getElementById("field-anonymous");
+const nameInputContainer = document.getElementById("name-input-container");
 const fieldNameInput = document.getElementById("field-name");
-if (anonymousCheckbox && fieldNameInput) {
+if (anonymousCheckbox && nameInputContainer && fieldNameInput) {
     anonymousCheckbox.addEventListener("change", (e) => {
         if (e.target.checked) {
+            nameInputContainer.classList.add("collapsed");
             fieldNameInput.value = "";
             fieldNameInput.disabled = true;
             fieldNameInput.placeholder = "Reporting Anonymously...";
         } else {
+            nameInputContainer.classList.remove("collapsed");
             fieldNameInput.disabled = false;
             fieldNameInput.placeholder = "Enter your name or leave empty";
         }
@@ -265,37 +362,74 @@ const uploadPrompt = document.getElementById("upload-prompt");
 const uploadPreviewContainer = document.getElementById("upload-preview-container");
 const uploadImgPreview = document.getElementById("upload-img-preview");
 const btnRemoveImg = document.getElementById("btn-remove-img");
+const uploadZone = document.getElementById("upload-zone");
 
 if (imageInput) {
     imageInput.addEventListener("change", (e) => {
         const file = e.target.files[0];
-        if (file) {
-            if (file.size > 2 * 1024 * 1024) {
-                alert("File size exceeds 2MB limit.");
-                imageInput.value = "";
-                return;
-            }
-
-            const reader = new FileReader();
-            reader.onload = function(evt) {
-                uploadedImageBase64 = evt.target.result;
-                uploadImgPreview.src = uploadedImageBase64;
-                uploadPrompt.classList.add("hidden");
-                uploadPreviewContainer.classList.remove("hidden");
-            };
-            reader.readAsDataURL(file);
-        }
+        handleUploadedFile(file);
     });
+}
+
+// Professional Drag & Drop Handler
+if (uploadZone) {
+    ['dragenter', 'dragover'].forEach(eventName => {
+        uploadZone.addEventListener(eventName, (e) => {
+            e.preventDefault();
+            e.stopPropagation();
+            uploadZone.classList.add("drag-over");
+        }, false);
+    });
+
+    ['dragleave', 'drop'].forEach(eventName => {
+        uploadZone.addEventListener(eventName, (e) => {
+            e.preventDefault();
+            e.stopPropagation();
+            uploadZone.classList.remove("drag-over");
+        }, false);
+    });
+
+    uploadZone.addEventListener('drop', (e) => {
+        const dt = e.dataTransfer;
+        const file = dt.files[0];
+        handleUploadedFile(file);
+    });
+}
+
+function handleUploadedFile(file) {
+    if (file) {
+        if (!file.type.startsWith('image/')) {
+            showToast("Unsupported file type. Please upload an image.", "error");
+            if (imageInput) imageInput.value = "";
+            return;
+        }
+        if (file.size > 2 * 1024 * 1024) {
+            showToast("File size exceeds 2MB limit.", "error");
+            if (imageInput) imageInput.value = "";
+            return;
+        }
+
+        const reader = new FileReader();
+        reader.onload = function(evt) {
+            uploadedImageBase64 = evt.target.result;
+            uploadImgPreview.src = uploadedImageBase64;
+            uploadPrompt.classList.add("hidden");
+            uploadPreviewContainer.classList.remove("hidden");
+            showToast("Evidence photo attached successfully.", "info");
+        };
+        reader.readAsDataURL(file);
+    }
 }
 
 if (btnRemoveImg) {
     btnRemoveImg.addEventListener("click", (e) => {
-        e.stopPropagation(); // Avoid triggering file chooser
+        e.stopPropagation(); 
         uploadedImageBase64 = null;
-        imageInput.value = "";
+        if (imageInput) imageInput.value = "";
         uploadImgPreview.src = "";
         uploadPreviewContainer.classList.add("hidden");
         uploadPrompt.classList.remove("hidden");
+        showToast("Evidence photo detached.", "info");
     });
 }
 
@@ -306,8 +440,6 @@ if (reportForm) {
         e.preventDefault();
 
         const reports = getReports();
-        
-        // Generate new sequential ID (e.g. 005)
         const lastId = reports.length > 0 ? Math.max(...reports.map(r => parseInt(r.id))) : 0;
         const newId = String(lastId + 1).padStart(3, '0');
 
@@ -360,18 +492,20 @@ if (reportForm) {
         reports.push(newReport);
         saveReports(reports);
 
-        // Reset form variables
+        // Reset inputs
         reportForm.reset();
         uploadedImageBase64 = null;
         if (uploadPreviewContainer) uploadPreviewContainer.classList.add("hidden");
         if (uploadPrompt) uploadPrompt.classList.remove("hidden");
         fieldNameInput.disabled = false;
         fieldNameInput.placeholder = "Enter your name or leave empty";
-        reporterStudentBtn.click(); // Reset reporter tabs
+        nameInputContainer.classList.remove("collapsed");
+        reporterStudentBtn.click(); 
 
-        // Redirect to View Reports
-        alert("Report submitted successfully! You can track it under the View Reports list.");
-        window.location.hash = "#view";
+        showToast(`Report #${newId} filed successfully!`, "success");
+        setTimeout(() => {
+            window.location.hash = "#view";
+        }, 600);
     });
 }
 
@@ -401,7 +535,6 @@ function renderReportsList() {
     const searchQuery = filterSearch ? filterSearch.value.toLowerCase().trim() : "";
     const categoryQuery = filterCategory ? filterCategory.value : "All";
 
-    // Filtering logic
     const filteredReports = reports.filter(report => {
         const matchesSearch = report.title.toLowerCase().includes(searchQuery) ||
                              report.description.toLowerCase().includes(searchQuery) ||
@@ -414,7 +547,6 @@ function renderReportsList() {
         return matchesSearch && matchesCategory && matchesStatus;
     });
 
-    // Handle empty state
     if (filteredReports.length === 0) {
         container.innerHTML = "";
         emptyState.classList.remove("hidden");
@@ -422,7 +554,6 @@ function renderReportsList() {
     }
     emptyState.classList.add("hidden");
 
-    // Render cards
     container.innerHTML = filteredReports.map(report => {
         const isStudent = report.reporterType === 'student';
         const reporterString = report.reporterName === 'Anonymous' 
@@ -504,7 +635,6 @@ function renderReportDetails(id) {
              <p class="memo-empty">No administrator feedback has been written yet for this report.</p>
            </div>`;
 
-    // Render Timeline Events
     const timelineHTML = report.timeline.map((event, idx) => `
         <div class="timeline-event">
             <div class="timeline-dot ${idx === report.timeline.length - 1 ? 'active' : ''}"></div>
@@ -515,7 +645,6 @@ function renderReportDetails(id) {
     `).join("");
 
     container.innerHTML = `
-        <!-- Main Column: Details -->
         <div class="details-main">
             <div class="details-card glass-card">
                 <div class="details-meta-badges">
@@ -560,18 +689,13 @@ function renderReportDetails(id) {
             </div>
         </div>
 
-        <!-- Sidebar Column: Action center -->
         <div class="details-sidebar">
-            
-            <!-- Timeline Status Tracker -->
             <div class="sidebar-block glass-card">
                 <h3>Resolution Timeline</h3>
                 <div class="timeline">
                     ${timelineHTML}
                 </div>
             </div>
-
-            <!-- Official Officer Memo -->
             ${officerCommentHTML}
         </div>
     `;
@@ -588,12 +712,16 @@ if (adminFilterCategory) adminFilterCategory.addEventListener("change", renderAd
 
 if (btnResetData) {
     btnResetData.addEventListener("click", () => {
-        if (confirm("Are you sure you want to restore the default reports? This will overwrite your current database.")) {
-            localStorage.removeItem("iro_reports");
-            getReports();
-            renderAdminDashboard();
-            alert("Database restored to default mock reports!");
-        }
+        showConfirmModal(
+            "Restore Mock Database",
+            "This will completely overwrite all local changes and restore the default 4 reports. Are you sure you want to proceed?",
+            () => {
+                localStorage.removeItem("iro_reports");
+                getReports();
+                renderAdminDashboard();
+                showToast("Mock database restored.", "success");
+            }
+        );
     });
 }
 
@@ -612,8 +740,10 @@ if (adminLoginForm) {
             if (loginErrorMsg) loginErrorMsg.classList.add("hidden");
             adminLoginForm.reset();
             renderAdminDashboard();
+            showToast("Successfully authenticated as Admin.", "success");
         } else {
             if (loginErrorMsg) loginErrorMsg.classList.remove("hidden");
+            showToast("Authentication failed. Check credentials.", "error");
         }
     });
 }
@@ -624,11 +754,11 @@ if (btnAdminLogout) {
     btnAdminLogout.addEventListener("click", () => {
         sessionStorage.removeItem("iro_admin_logged_in");
         renderAdminDashboard();
+        showToast("Logged out of Admin Panel.", "info");
     });
 }
 
 function renderAdminDashboard() {
-    // Check authentication state
     const loggedIn = sessionStorage.getItem("iro_admin_logged_in") === "true";
     const loginContainer = document.getElementById("admin-login-container");
     const dashboardContainer = document.getElementById("admin-dashboard-container");
@@ -645,18 +775,26 @@ function renderAdminDashboard() {
     const reports = getReports();
     const tableBody = document.getElementById("admin-table-rows");
 
-    // Render Stats counters
+    // Render Stats counters with count up animation
     const total = reports.length;
     const pending = reports.filter(r => r.status === 'Pending').length;
     const progress = reports.filter(r => r.status === 'In Progress').length;
     const resolved = reports.filter(r => r.status === 'Resolved').length;
     const rejected = reports.filter(r => r.status === 'Rejected').length;
 
-    document.getElementById("admin-total-count").textContent = total;
-    document.getElementById("admin-pending-count").textContent = pending;
-    document.getElementById("admin-progress-count").textContent = progress;
-    document.getElementById("admin-resolved-count").textContent = resolved;
-    document.getElementById("admin-rejected-count").textContent = rejected;
+    const totalW = document.getElementById("admin-total-count");
+    const pendingW = document.getElementById("admin-pending-count");
+    const progressW = document.getElementById("admin-progress-count");
+    const resolvedW = document.getElementById("admin-resolved-count");
+    const rejectedW = document.getElementById("admin-rejected-count");
+
+    if (totalW && pendingW && progressW && resolvedW && rejectedW) {
+        animateValue(totalW, 0, total, 600);
+        animateValue(pendingW, 0, pending, 600);
+        animateValue(progressW, 0, progress, 600);
+        animateValue(resolvedW, 0, resolved, 600);
+        animateValue(rejectedW, 0, rejected, 600);
+    }
 
     // Filters
     const searchQuery = adminFilterSearch ? adminFilterSearch.value.toLowerCase().trim() : "";
@@ -676,7 +814,6 @@ function renderAdminDashboard() {
         return;
     }
 
-    // Render Admin Table Rows
     let rowsHTML = "";
     filteredReports.forEach(report => {
         const isStudent = report.reporterType === 'student';
@@ -685,7 +822,6 @@ function renderAdminDashboard() {
             : `${report.reporterName} (${isStudent ? 'Student' : 'Resident'})`;
 
         rowsHTML += `
-            <!-- Data Row -->
             <tr id="row-${report.id}">
                 <td style="font-weight:700; color:var(--accent-teal)">#${report.id}</td>
                 <td>
@@ -718,7 +854,6 @@ function renderAdminDashboard() {
                 </td>
             </tr>
             
-            <!-- Hidden Editor Row -->
             <tr id="editor-${report.id}" class="admin-editor-row hidden">
                 <td colspan="7">
                     <div class="admin-editor-wrapper">
@@ -771,11 +906,11 @@ window.updateReportStatus = function(id, newStatus) {
 
             saveReports(reports);
             renderAdminDashboard();
+            showToast(`Report #${id} updated to ${newStatus}.`, "info");
         }
     }
 };
 
-// Toggle Inline Comment Editor
 window.toggleAdminCommentEditor = function(id) {
     const editorRow = document.getElementById(`editor-${id}`);
     if (editorRow) {
@@ -783,7 +918,6 @@ window.toggleAdminCommentEditor = function(id) {
     }
 };
 
-// Save Officer Comments
 window.saveAdminComment = function(id) {
     const reports = getReports();
     const reportIndex = reports.findIndex(r => r.id === id);
@@ -792,7 +926,6 @@ window.saveAdminComment = function(id) {
     if (reportIndex !== -1) {
         reports[reportIndex].comment = commentText;
         
-        // Append note to timeline about comments
         const today = new Date();
         const dateStr = today.toLocaleDateString('en-US', { year: 'numeric', month: 'short', day: 'numeric' });
         const timeStr = today.toLocaleTimeString('en-US', { hour: '2-digit', minute: '2-digit' });
@@ -801,22 +934,26 @@ window.saveAdminComment = function(id) {
             status: reports[reportIndex].status,
             date: dateStr,
             time: timeStr,
-            note: "Officer added details feedback and instructions memo."
+            note: "Officer added feedback and instructions memo."
         });
 
         saveReports(reports);
         toggleAdminCommentEditor(id);
         renderAdminDashboard();
-        alert("Official comment memo saved successfully.");
+        showToast("Memo comment saved.", "success");
     }
 };
 
-// Delete false report
 window.deleteReport = function(id) {
-    if (confirm(`Are you sure you want to delete report #${id} permanently? This action is irreversible and should only be used for false, spam or test reports.`)) {
-        let reports = getReports();
-        reports = reports.filter(r => r.id !== id);
-        saveReports(reports);
-        renderAdminDashboard();
-    }
+    showConfirmModal(
+        "Delete Report permanently",
+        `Are you sure you want to delete report #${id}? This action is irreversible and should only be done for test or spam reports.`,
+        () => {
+            let reports = getReports();
+            reports = reports.filter(r => r.id !== id);
+            saveReports(reports);
+            renderAdminDashboard();
+            showToast(`Report #${id} has been permanently deleted.`, "success");
+        }
+    );
 };
